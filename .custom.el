@@ -155,6 +155,19 @@
   :hook ((c-mode cc-mode c++-mode objc-mode cuda-mode) .
          (lambda () (require 'ccls) (lsp))))
 
+
+;;(evil-set-initial-state 'ccls--tree-mode 'emacs)
+;;evil-record-macro keybinding clobbers q in cquery-tree-mode-map for some reason?
+;;(evil-make-overriding-map 'ccls-tree-mode-map)
+(set (make-local-variable 'lsp-disabled-clients) '(clangd cquery))
+;; 高亮
+(setq ccls-sem-highlight-method 'font-lock)
+(ccls-use-default-rainbow-sem-highlight)
+
+;; flymake disable??
+(setq lsp-prefer-flymake nil)
+(setq-default flycheck-disabled-checkers '(c/c++-clang c/c++-cppcheck c/c++-gcc))
+
 ;; 补全显示
 (setq company-minimum-prefix-length 1
       company-idle-delay 0.0) ;; default is 0.2
