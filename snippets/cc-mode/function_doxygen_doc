@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: Function
+# key: @fun
+# --
+/* ********************************************************
+* @function:      ${1:function description}
+* @Description:   ${2:detailed description}
+* @param[]:       ${3:param}
+* @return[]:      ${4:return type}
+*/
+* ********************************************************/
