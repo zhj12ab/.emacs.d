@@ -36,7 +36,8 @@
 (add-hook 'emacs-lisp-mode-hook 'show-paren-mode)
 
 ;; 主题配置
-(load-theme 'solarized-dark t)
+;; (load-theme 'solarized-dark t)
+(load-theme 'doom-molokai t)
 
 ;; 设置字体
 (set-fontset-font "fontset-default" 'unicode'("等距更纱黑体 T SC"))
@@ -93,7 +94,6 @@
   "wj" 'evil-window-down
   "wk" 'evil-window-up)
 
-
 ;;定义在cpp文件和.h文件中切换的函数
 ;;;###autoload
 ;; (defun switch-source-file ()
@@ -134,6 +134,7 @@
                              (get-buffer-create "*Astyle Errors*") t))
   (goto-char 1)
   (forward-line astyle-nowlinenum))
+
 ;; 使用use-package
 (require-package 'use-package)
 (require-package 'ccls)
@@ -163,7 +164,6 @@
   :hook ((c-mode cc-mode c++-mode objc-mode cuda-mode) .
          (lambda () (require 'ccls) (lsp))))
 
-
 ;;(evil-set-initial-state 'ccls--tree-mode 'emacs)
 ;;evil-record-macro keybinding clobbers q in cquery-tree-mode-map for some reason?
 ;;(evil-make-overriding-map 'ccls-tree-mode-map)
@@ -180,46 +180,8 @@
 (setq company-minimum-prefix-length 1
       company-idle-delay 0.0) ;; default is 0.2
 
-;; ;; 括号高亮
-;; (require-package 'highlight-parentheses)
-;; (define-globalized-minor-mode global-highlight-parentheses-mode
-;;   highlight-parentheses-mode
-;;   (lambda ()
-;;     (highlight-parentheses-mode t)))
-;; (global-highlight-parentheses-mode t)
-
-;; ;; 陈斌推荐lsp mode
-;; (with-eval-after-load 'lsp-mode
-;;   ;; enable log only for debug
-;;   (setq lsp-log-io nil)
-;;   ;; use `evil-matchit' instead
-;;   (setq lsp-enable-folding nil)
-;;   ;; no real time syntax check
-;;   (setq lsp-diagnostic-package :none)
-;;   ;; handle yasnippet by myself
-;;   (setq lsp-enable-snippet nil)
-;;   ;; use `company-ctags' only.
-;;   ;; Please note `company-lsp' is automatically enabled if it's installed
-;;   (setq lsp-enable-completion-at-point nil)
-;;   ;; turn off for better performance
-;;   (setq lsp-enable-symbol-highlighting nil)
-;;   ;; use find-fine-in-project instead
-;;   (setq lsp-enable-links nil)
-;;   ;; auto restart lsp
-;;   (setq lsp-restart 'auto-restart)
-;;   ;; don't watch 3rd party javascript libraries
-;;   (push "[/\\\\][^/\\\\]*\\.\\(json\\|html\\|jade\\)$" lsp-file-watch-ignored)
-;;   ;; don't ping LSP lanaguage server too frequently
-;;   (defvar lsp-on-touch-time 0)
-;;   (defadvice lsp-on-change (around lsp-on-change-hack activate)
-;;     ;; do run `lsp-on-change' too frequently
-;;     (when (> (- (float-time (current-time))
-;;                 lsp-on-touch-time) 30) ;; 30 seconds
-;;       (setq lsp-on-touch-time (float-time (current-time)))
-;;       ad-do-it)))
-
-;;use color-rg
-(add-to-list 'load-path "c:/extern_exec/color-rg/")
+;;use color-rg into side_lisp
+;;(add-to-list 'load-path "c:/extern_exec/color-rg/")
 (require 'color-rg)
 
 ;; no display ispell function
