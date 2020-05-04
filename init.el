@@ -97,7 +97,10 @@
   (require-init 'init-elpa)
   (require-init 'init-exec-path t) ;; Set up $PATH
   ;; Any file use flyspell should be initialized after init-spelling.el
-  (require-init 'init-spelling t)
+
+  ;; (require-init 'init-spelling t)
+  (require-init 'init-spelling nil)
+
   (require-init 'init-gui-frames t)
   (require-init 'init-uniquify t)
   (require-init 'init-ibuffer t)
@@ -142,11 +145,11 @@
   ;; handy tools though not must have
   (require-init 'init-misc t)
 
-  (require-init 'init-emacs-w3m t)
+  ;; (require-init 'init-emacs-w3m t)
   (require-init 'init-shackle t)
   (require-init 'init-dired t)
   (require-init 'init-writting t)
-  (require-init 'init-hydra) ; hotkey is required everywhere
+  ;; (require-init 'init-hydra) ; hotkey is required everywhere
   ;; use evil mode (vi key binding)
   (require-init 'init-evil) ; init-evil dependent on init-clipboard
 

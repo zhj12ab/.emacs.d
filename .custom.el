@@ -62,34 +62,54 @@
   ;; 命令
   "SPC" 'execute-extended-command
   "j=" 'zenghuajian/astyle
-  "/" 'counsel-rg
+  ;; "/" 'counsel-rg
+  "/" 'color-rg-search-input-in-project
   ;; exit
   "qq" 'kill-emacs
   ;; buffer
   "TAB" 'evil-switch-to-windows-last-buffer
   "bb" 'counsel-switch-buffer
   "bd" 'evil-delete-buffer
-  "bm" 'zenghuajian/toggle-maximize-buffer
+  "bm" 'toggle-full-window
   ;; file setting
   "fr" 'my-counsel-recentf
   "ff" 'counsel-find-file
   "fs" 'save-buffer
   "fS" 'save-some-buffers
   "fed" 'open-init-file
+  ;; switch to cpp h
+  ;; "sw" 'switch-source-file
+  ;; comment
+  "cl" 'evilnc-comment-or-uncomment-lines
   ;; windows setting
-  "wd" 'delete-window-on
-  "wD" 'delete-other-windows
+  "w TAB" 'ace-window
+  "ws" 'ace-swap-window
+  "wd" 'delete-windows-on
+  "wm" 'delete-other-windows
   "w/" 'split-window-right
-  "w-" 'split-window-down
+  "w-" 'split-window-below
   "wl" 'evil-window-right
   "wh" 'evil-window-left
   "wj" 'evil-window-down
   "wk" 'evil-window-up)
 
+
+;;定义在cpp文件和.h文件中切换的函数
+;;;###autoload
+;; (defun switch-source-file ()
+;;   (interactive)
+;;   (setq file-name (buffer-file-name))
+;;   (if (string-match "//.cpp" file-name)
+;;       (find-file (replace-regexp-in-string "//.cpp" "/.h" file-name)))
+;;   (if (string-match "//.c" file-name)
+;;       (find-file (replace-regexp-in-string "//.c" "/.h" file-name)))
+;;   (if (string-match "//.h" file-name)
+;;       (find-file (replace-regexp-in-string "//.h" "/.cpp" file-name))))
+
 ;; 打开配置文件
 (defun open-init-file ()
   (interactive)
-  (find-file "~/.emacs.d/init.el"))
+  (find-file "~/.emacs.d/.custom.el"))
 
 ;; Use en_US locale to format time.
 ;; if not set, the OS locale is used.
@@ -97,18 +117,6 @@
 
 ;; 配置esc 为3个esc
 (global-set-key (kbd "<escape>")      'keyboard-escape-quit)
-
-;; 当前buffer 最大化
-(defun zenghuajian/toggle-maximize-buffer ()
-  "Maximize buffer"
-  (interactive)
-  (save-excursion
-    (if (and (= 1 (length (window-list)))
-             (assoc ?_ register-alist))
-        (jump-to-register ?_)
-      (progn
-        (window-configuration-to-register ?_)
-        (delete-other-windows)))))
 
 ;; 使用astyl 格式化
 (defun zenghuajian/astyle (start end)
@@ -209,3 +217,19 @@
 ;;                 lsp-on-touch-time) 30) ;; 30 seconds
 ;;       (setq lsp-on-touch-time (float-time (current-time)))
 ;;       ad-do-it)))
+
+;;use color-rg
+(add-to-list 'load-path "c:/extern_exec/color-rg/")
+(require 'color-rg)
+
+;; no display ispell function
+(defun message-off-advice (oldfun &rest args)
+  "Quiet down messages in adviced OLDFUN."
+  (let ((message-off (make-symbol "message-off")))
+    (unwind-protect
+    (progn
+      (advice-add #'message :around #'ignore (list 'name message-off))
+      (apply oldfun args))
+    (advice-remove #'message message-off))))
+
+(advice-add #'ispell-init-process :around #'message-off-advice)

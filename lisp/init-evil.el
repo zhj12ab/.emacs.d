@@ -437,7 +437,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
   "," 'evilnc-comment-operator
   "bf" 'beginning-of-defun
   "bu" 'backward-up-list
-  "bb" (lambda () (interactive) (switch-to-buffer nil)) ; to previous buffer
+  ;; "bb" (lambda () (interactive) (switch-to-buffer nil)) ; to previous buffer
   "ef" 'end-of-defun
   "m" 'evil-set-marker
   "em" 'my-erase-visible-buffer
@@ -478,10 +478,10 @@ If the character before and after CH is space or tab, CH is NOT slash"
   "ct" 'evilnc-comment-or-uncomment-html-tag ; evil-nerd-commenter v3.3.0 required
   "ic" 'my-imenu-comments
   ;; {{ window move
-  "wh" 'evil-window-left
-  "wl" 'evil-window-right
-  "wk" 'evil-window-up
-  "wj" 'evil-window-down
+  ;; "wh" 'evil-window-left
+  ;; "wl" 'evil-window-right
+  ;; "wk" 'evil-window-up
+  ;; "wj" 'evil-window-down
   ;; }}
   "rv" 'evilmr-replace-in-defun
   "rb" 'evilmr-replace-in-buffer
@@ -630,7 +630,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
   "dd" 'pwd
   "mm" 'counsel-evil-goto-global-marker
   "mf" 'mark-defun
-  "xc" 'save-buffers-kill-terminal ; not used frequently
+  ;; "xc" 'save-buffers-kill-terminal ; not used frequently
   "cc" 'my-dired-redo-last-command
   "ss" 'wg-create-workgroup ; save windows layout
   "ee" 'evil-iedit-state/iedit-mode ; start iedit in emacs to rename variables in defun
@@ -706,30 +706,30 @@ If the character before and after CH is space or tab, CH is NOT slash"
   (if (and (boundp 'wgrep-prepared) wgrep-prepared)
       (wgrep-toggle-readonly-area)))
 
-;; {{ Use `;` as leader key, for searching something
-(general-create-definer my-semicolon-leader-def
-  :prefix ";"
-  :states '(normal visual))
+;; ;; {{ Use `;` as leader key, for searching something
+;; (general-create-definer my-semicolon-leader-def
+;;   :prefix ";"
+;;   :states '(normal visual))
 
-(my-semicolon-leader-def
- ;; Search character(s) at the beginning of word
- ;; See https://github.com/abo-abo/avy/issues/70
- ;; You can change the avy font-face in ~/.custom.el:
- ;;  (with-eval-after-load 'avy
- ;;    (set-face-attribute 'avy-lead-face-0 nil :foreground "black")
- ;;    (set-face-attribute 'avy-lead-face-0 nil :background "#f86bf3"))
- ";" 'ace-pinyin-jump-char-2
- "w" 'avy-goto-word-or-subword-1
- "a" 'avy-goto-char-timer
- "db" 'sdcv-search-input ; details
- "dt" 'sdcv-search-input+ ; summary
- "dd" 'my-lookup-dict-org
- "mm" 'lookup-doc-in-man
- "gg" 'w3m-google-search
- "gd" 'w3m-search-financial-dictionary
- "ga" 'w3m-java-search
- "gh" 'w3mext-hacker-search ; code search in all engines with firefox
- "gq" 'w3m-stackoverflow-search)
+;; (my-semicolon-leader-def
+;;  ;; Search character(s) at the beginning of word
+;;  ;; See https://github.com/abo-abo/avy/issues/70
+;;  ;; You can change the avy font-face in ~/.custom.el:
+;;  ;;  (with-eval-after-load 'avy
+;;  ;;    (set-face-attribute 'avy-lead-face-0 nil :foreground "black")
+;;  ;;    (set-face-attribute 'avy-lead-face-0 nil :background "#f86bf3"))
+;;  ";" 'ace-pinyin-jump-char-2
+;;  "w" 'avy-goto-word-or-subword-1
+;;  "a" 'avy-goto-char-timer
+;;  "db" 'sdcv-search-input ; details
+;;  "dt" 'sdcv-search-input+ ; summary
+;;  "dd" 'my-lookup-dict-org
+;;  "mm" 'lookup-doc-in-man
+;;  "gg" 'w3m-google-search
+;;  "gd" 'w3m-search-financial-dictionary
+;;  "ga" 'w3m-java-search
+;;  "gh" 'w3mext-hacker-search ; code search in all engines with firefox
+;;  "gq" 'w3m-stackoverflow-search)
 ;; }}
 
 ;; {{ remember what we searched
