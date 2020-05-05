@@ -17,7 +17,7 @@
 
 ;; {{ `sh-mode' setup
 (defun sh-mode-hook-setup ()
-  (when (executable-find "shellcheck")
+  (when (and *emacs26* (executable-find "shellcheck"))
     (flymake-shellcheck-load)
     (flymake-mode 1)))
 (add-hook 'sh-mode-hook 'sh-mode-hook-setup)
@@ -306,7 +306,6 @@ This function can be re-used by other major modes after compilation."
                         "\\.sub$"
                         "\\.srt$"
                         "\\.ass$"
-                        ;; ~/.emacs.d/**/*.el included
                         ;; "/home/[a-z]\+/\\.[a-df-z]" ; configuration file should not be excluded
                         ))
 ;; }}
@@ -803,7 +802,7 @@ If no region is selected, `kill-ring' or clipboard is used instead."
 
 ;; {{ https://www.emacswiki.org/emacs/EmacsSession better than "desktop.el" or "savehist".
 ;; Any global variable matching `session-globals-regexp' is saved *automatically*.
-(setq session-save-file (expand-file-name "~/.emacs.d/.session"))
+(setq session-save-file (expand-file-name (concat my-emacs-d ".session")))
 (setq session-globals-max-size 2048)
 ;; can store 8Mb string
 (setq session-globals-max-string (* 8 1024 1024))
@@ -1099,7 +1098,7 @@ Including indent-buffer, which should not be called automatically on save."
   (my-ensure 'url)
   (if word (setq word (downcase word)))
   (let* ((url (format "https://dictionary.cambridge.org/pronunciation/english/%s" word))
-         (cached-mp3 (file-truename (format "~/.emacs.d/misc/%s.mp3" word)))
+         (cached-mp3 (file-truename (concat my-emacs-d (format "misc/%s.mp3" word))))
          (player (if (not *is-a-mac*) (my-guess-mplayer-path) "open"))
          html-text
          online-mp3)
@@ -1217,7 +1216,7 @@ Including indent-buffer, which should not be called automatically on save."
 ;; {{ eldoc
 (with-eval-after-load 'eldoc
   ;; multi-line message should not display too soon
-  (setq eldoc-idle-delay 1.5)
+  (setq eldoc-idle-delay 1)
   (setq eldoc-echo-area-use-multiline-p t))
 ;;}}
 
@@ -1237,7 +1236,7 @@ See https://github.com/RafayGhafoor/Subscene-Subtitle-Grabber."
     (cond
      (video-file
       (let* ((default-directory (file-name-directory video-file)))
-        (shell-command (format "%s --movie-name \"%s\" &"
+        (shell-command (format "%s -m \"%s\" &"
                                cmd-prefix
                                (file-name-base video-file)))))
      (t

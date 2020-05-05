@@ -17,8 +17,8 @@
     nov
     bbdb
     native-complete
-    flymake-shellcheck ; check shell script
     company-native-complete
+    flymake-shellcheck ; check shell script
     js2-mode ; need new features
     git-timemachine ; stable version is broken when git rename file
     evil-textobj-syntax
@@ -120,7 +120,7 @@
 ;; I don't use any packages from GNU ELPA because I want to minimize
 ;; dependency on 3rd party web site.
 (setq package-archives
-      '(("localelpa" . "~/.emacs.d/localelpa/")
+      '(
         ;; uncomment below line if you need use GNU ELPA
         ("melpa-cn" . "http://elpa.emacs-china.org/melpa/")
         ("org-cn"   . "http://elpa.emacs-china.org/org/")
@@ -150,16 +150,19 @@
 (defvar my-ask-elpa-mirror t)
 (when (and (not noninteractive) ; no popup in batch mode
            my-ask-elpa-mirror
-           (not (file-exists-p (file-truename "~/.emacs.d/elpa")))
+           (not (file-exists-p (file-truename (concat my-emacs-d "elpa"))))
            (yes-or-no-p "Switch to faster package repositories in China temporarily?
 You still need modify `package-archives' in \"init-elpa.el\" to PERMANENTLY use this ELPA mirror."))
   (setq package-archives
-        '(("localelpa" . "~/.emacs.d/localelpa/")
-          ("melpa" . "https://mirrors.163.com/elpa/melpa/")
+        '(("melpa" . "https://mirrors.163.com/elpa/melpa/")
           ("melpa-stable" . "https://mirrors.163.com/elpa/melpa-stable/"))))
 
 ;; Un-comment below line if you follow "Install stable version in easiest way"
-;; (setq package-archives '(("localelpa" . "~/.emacs.d/localelpa/") ("myelpa" . "~/projs/myelpa/")))
+;; (setq package-archives '(("myelpa" . "~/myelpa/")))
+
+;; my local repository is always needed.
+(push (cons "localelpa" (concat my-emacs-d "localelpa/")) package-archives)
+
 
 ;;--------------------------------------------------------------------------
 ;; Internal implementation, newbies should NOT touch code below this line!
@@ -290,7 +293,6 @@ PACKAGE is a symbol, VERSION is a vector as produced by `version-to-list', and
 (require-package 'bbdb)
 (require-package 'pomodoro)
 (require-package 'flymake-lua)
-(require-package 'flymake-shellcheck)
 ;; rvm-open-gem to get gem's code
 (require-package 'rvm)
 ;; C-x r l to list bookmarks
@@ -308,7 +310,7 @@ PACKAGE is a symbol, VERSION is a vector as produced by `version-to-list', and
 (require-package 'company-native-complete)
 (require-package 'company-c-headers)
 (require-package 'company-statistics)
-;; (require-package 'lsp-mode)
+(require-package 'lsp-mode)
 (require-package 'elpy)
 (require-package 'legalese)
 (require-package 'simple-httpd)
@@ -367,6 +369,7 @@ PACKAGE is a symbol, VERSION is a vector as produced by `version-to-list', and
 ;; }}
 
 (when *emacs26*
+  (require-package 'flymake-shellcheck)
   ;; org => ppt, org v8.3 is required (Emacs 25 uses org v8.2)
   (require-package 'org-re-reveal))
 

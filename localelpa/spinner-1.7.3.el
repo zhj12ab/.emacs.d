@@ -98,7 +98,7 @@
 
 ;;; Code:
 (eval-when-compile
-  (require 'cl-lib))
+  (require 'cl))
 
 (defconst spinner-types
   '((3-line-clock . ["┤" "┘" "┴" "└" "├" "┌" "┬" "┐"])
