@@ -1,6 +1,6 @@
 request/
 .depend
-pyim/
+/pyim/
 anaconda-mode/
 .wg-file.el
 /url/cache
@@ -41,7 +41,7 @@ TAGS
 GTAGS
 GPATH
 GRTAGS
-.emacs.d/emms/
+emms/
 tutorial/
 /var
 org-clock-save.el
@@ -66,4 +66,3 @@ network-security.data
 *.ogg
 nov-places
 transient/
-.lsp-session-v1
