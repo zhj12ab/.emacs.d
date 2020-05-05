@@ -238,9 +238,9 @@
   (setq pyim-page-length 5)
 
   :bind
-  (("M-j" . pyim-convert-string-at-point) ;与 pyim-probe-dynamic-english 配合
-   ("C-;" . pyim-delete-word-from-personal-buffer)))
+  (("C-;" . pyim-convert-string-at-point) ;与 pyim-probe-dynamic-english 配合
+   ;;("C-;" . pyim-delete-word-from-personal-buffer)
+   ))
 
 ;; 配置sdcv
-(setq sdcv-dictionary-data-dir "~/.emacs.d/.startdic")
-
+(setq sdcv-dictionary-data-dir "~/.startdic")
