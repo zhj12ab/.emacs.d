@@ -244,3 +244,8 @@
 
 ;; 配置sdcv
 (setq sdcv-dictionary-data-dir "~/.startdic")
+
+;; 配置路径
+(when *win64*
+(setenv "PATH" "C:\\extern_exec;C:\\extern_exec\\Aspell\\bin;C:\\extern_exec\\glo663wb\\bin;C:\\cygwin64\\bin;C:\\msys64\\mingw64\\bin;C:\\msys64\\usr\\bin;C:\\Windows\\System32;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0")
+ )
