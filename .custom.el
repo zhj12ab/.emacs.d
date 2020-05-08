@@ -27,12 +27,26 @@
 ;;      ("gnu-cn"   . "http://elpa.emacs-china.org/gnu/")))
 ;;
 
+;; 设置用户名与邮箱
+(setq user-full-name "HuaJianZeng")
+(setq user-mail-address "zhj12ab@gmail.com")
+
 ;; 设置字体
+(when *win64*
 (set-fontset-font "fontset-default" 'unicode'("等距更纱黑体 T SC"))
 (set-fontset-font "fontset-default" 'gb18030'("等距更纱黑体 T SC". "unicode-bmp"))
 (dolist (param '((font . "等距更纱黑体 T SC")))
   (add-to-list 'default-frame-alist param)
   (add-to-list 'initial-frame-alist param)
+  )
+  )
+(when *linux*
+(set-fontset-font "fontset-default" 'unicode'("Sarasa Mono T SC"))
+(set-fontset-font "fontset-default" 'gb18030'("Sarasa Mono T SC". "unicode-bmp"))
+(dolist (param '((font . "Sarasa Mono T SC")))
+  (add-to-list 'default-frame-alist param)
+  (add-to-list 'initial-frame-alist param)
+  )
   )
 ;; ;; 设置字体
 ;; ;; Setting English Font
