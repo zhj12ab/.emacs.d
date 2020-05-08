@@ -6,8 +6,8 @@
 ;; Maintainer: Andy Stewart <lazycat.manatee@gmail.com>
 ;; Copyright (C) 2009, Andy Stewart, all rights reserved.
 ;; Created: 2009-02-05 22:04:02
-;; Version: 1.5.2
-;; Last-Updated: 2009-04-04 09:11:00
+;; Version: 3.3
+;; Last-Updated: 2020-02-13 19:32:08
 ;;           By: Andy Stewart
 ;; URL: http://www.emacswiki.org/emacs/download/sdcv.el
 ;; Keywords: startdict, sdcv
@@ -15,7 +15,7 @@
 ;;
 ;; Features that might be required by this library:
 ;;
-;; `outline' `cl'
+;; `posframe' `outline' `cl'
 ;;
 
 ;;; This file is NOT part of GNU Emacs
@@ -42,18 +42,18 @@
 ;; Interface for sdcv (StartDict console version).
 ;;
 ;; Translate word by sdcv (console version of Stardict), and display
-;; translation use showtip or buffer.
+;; translation use posframe or buffer.
 ;;
 ;; Below are commands you can use:
 ;;
 ;; `sdcv-search-pointer'
 ;; Search around word and display with buffer.
 ;; `sdcv-search-pointer+'
-;; Search around word and display with `showtip'.
+;; Search around word and display with `posframe'.
 ;; `sdcv-search-input'
 ;; Search input word and display with buffer.
 ;; `sdcv-search-input+'
-;; Search input word and display with `showtip'.
+;; Search input word and display with `posframe'.
 ;;
 ;; Tips:
 ;;
@@ -68,10 +68,10 @@
 ;;
 ;;      sudo aptitude install stardict sdcv -y
 ;;
-;; And make sure have install `popup.el',
+;; And make sure have install `posframe.el',
 ;; this extension depend it.
 ;; You can install get it from:
-;; http://www.emacswiki.org/cgi-bin/emacs/popup.el
+;; https://raw.githubusercontent.com/tumashu/posframe/master/posframe.el
 ;;
 ;; Put sdcv.el to your load-path.
 ;; The load-path is usually ~/elisp/.
@@ -84,7 +84,7 @@
 ;;
 ;; And then you need set two options.
 ;;
-;;  sdcv-dictionary-simple-list         (a simple dictionary list for showtip display)
+;;  sdcv-dictionary-simple-list         (a simple dictionary list for posframe display)
 ;;  sdcv-dictionary-complete-list       (a complete dictionary list for buffer display)
 ;;
 ;; Example, setup like this:
@@ -111,6 +111,7 @@
 ;;         "FOLDOC"
 ;;         "WordNet"
 ;;         ))
+;; (setq sdcv-dictionary-data-dir "your_sdcv_dict_dir")   ;; set local sdcv dict to search word
 ;;
 
 ;;; Customize:
@@ -124,11 +125,65 @@
 ;; `sdcv-dictionary-complete-list'
 ;; The dictionary list for complete describe.
 ;;
+;; `sdcv-dictionary-data-dir'
+;; The directory to store stardict dictionaries.
+;;
+;; `sdcv-tooltip-face'
+;; The foreground/background colors of sdcv tooltip.
+;;
 ;; All of the above can customize by:
 ;;      M-x customize-group RET sdcv RET
 ;;
 
 ;;; Change log:
+;;
+;; 2020/02/13
+;;      * Support EAF mode and don't jump pointer when sdcv frame popup.
+;;
+;; 2019/09/30
+;;      * Use `zh_CN.UTF-8' instead `en_US.UTF-8' to fixed dictionary name issue.
+;;
+;; 2019/04/12
+;;      * Use `split-string' instead `s-split' to remove depend of s.el
+;;
+;; 2019/04/05
+;;      * Add -x option avoid read dict from env `STARDICT_DATA_DIR'.
+;;
+;; 2019/02/20
+;;      * Try pick word from camelcase string and translate again if no translate result for current string.
+;;
+;; 2018/12/09
+;;      * Add command `sdcv-check' to help check invalid dictionaries.
+;;
+;; 2018/09/10
+;;      * Add option `sdcv-say-word-p', just support OSX now, please send me PR if you want to support Linux. ;)
+;;      * Make `sdcv-say-word' can work with `sdcv-search-pointer'.
+;;      * Make `sdcv-say-word' support all platform.
+;;      * Don't need `osx-lib' anymore.
+;;
+;; 2018/07/16
+;;      * Fixed typo that uncomment setenv code.
+;;
+;; 2018/07/08
+;;      * Add new option `sdcv-tooltip-border-width'.
+;;
+;; 2018/07/05
+;;      * Use `posframe' for MacOS, bug has fixed at: https://www.emacswiki.org/emacs/init-startup.el
+;;
+;; 2018/07/01
+;;      * Add support for MacOS, use `popup-tip'.
+;;
+;; 2018/06/23
+;;      * Set LANG environment variable, make sure `shell-command-to-string' can handle CJK character correctly.
+;;
+;; 2018/06/20
+;;      * Add `sdcv-dictionary-data-dir'
+;;      * Use `posframe' instead `showtip' for better user experience.
+;;      * Add new face `sdcv-tooltip-face' for customize.
+;;      * Automatically hide sdcv tooltip once user move cursor of scroll window.
+;;      * Make sure sdcv tooltip buffer kill after frame deleted.
+;;      * Improve function `sdcv-hide-tooltip-after-move' performance.
+;;      * Show tooltip above minibuffer if word is input from user.
 ;;
 ;; 2009/04/04
 ;;      * Fix the bug of `sdcv-search-pointer'.
@@ -164,7 +219,7 @@
 (require 'outline)
 (eval-when-compile
   (require 'cl))
-(require 'popup)
+(require 'posframe)
 
 ;;; Code:
 
@@ -178,6 +233,21 @@
   :type 'string
   :group 'sdcv)
 
+(defcustom sdcv-tooltip-name "*sdcv*"
+  "The name of sdcv tooltip name."
+  :type 'string
+  :group 'sdcv)
+
+(defcustom sdcv-program (if (string-equal system-type "darwin") "/usr/local/bin/sdcv" "sdcv")
+  "The path of sdcv."
+  :type 'string
+  :group 'sdcv)
+
+(defcustom sdcv-tooltip-timeout 5
+  "The timeout of sdcv tooltip show time, in seconds."
+  :type 'integer
+  :group 'sdcv)
+
 (defcustom sdcv-dictionary-complete-list nil
   "The complete dictionary list for translate."
   :type 'list
@@ -186,6 +256,32 @@
 (defcustom sdcv-dictionary-simple-list nil
   "The simply dictionary list for translate."
   :type 'list
+  :group 'sdcv)
+
+(defcustom sdcv-dictionary-data-dir nil
+  "Default, sdcv search word from /usr/share/startdict/dict/.
+You can customize this value with local dir,
+then you don't need copy dict data to /usr/share directory everytime when you finish system install."
+  :type 'string
+  :group 'sdcv)
+
+(defcustom sdcv-tooltip-border-width 10
+  "The border width of sdcv tooltip, default is 10 px."
+  :type 'integer
+  :group 'sdcv)
+
+(defcustom sdcv-say-word-p nil
+  "Say word after search word if this option is non-nil.
+Default is nil.
+
+Voice will use system feature if you use OSX.
+Voice will fetch from youdao.com if you use other system."
+  :type 'integer
+  :group 'sdcv)
+
+(defface sdcv-tooltip-face
+  '((t (:foreground "green" :background "gray12")))
+  "Face for sdcv tooltip"
   :group 'sdcv)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Variable ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -200,6 +296,12 @@
 
 (defvar sdcv-fail-notify-string "没有发现解释也... \n用更多的词典查询一下吧! ^_^"
   "This string is for notify user when search fail.")
+
+(defvar sdcv-tooltip-last-point 0
+  "Hold last point when show tooltip, use for hide tooltip after move point.")
+
+(defvar sdcv-tooltip-last-scroll-offset 0
+  "Hold last scroll offset when show tooltip, use for hide tooltip after window scroll.")
 
 (defvar sdcv-mode-font-lock-keywords    ;keyword for buffer display
   '(
@@ -286,9 +388,7 @@ And show information in other buffer."
 And show information use tooltip."
   (interactive)
   ;; Display simple translate result.
-  (sdcv-search-simple (or word (sdcv-prompt-input)))
-  ;; I set this delay for fast finger. ;)
-  (sit-for 0.5))
+  (sdcv-search-simple (or word (sdcv-prompt-input))))
 
 (defun sdcv-quit ()
   "Bury sdcv buffer and restore the previous window configuration."
@@ -308,7 +408,7 @@ And show information use tooltip."
       (progn
         (call-interactively 'previous-line)
         (recenter 0))
-    (message "Have reach last dictionary.")))
+    (message "Reached last dictionary.")))
 
 (defun sdcv-previous-dictionary ()
   "Jump to previous dictionary."
@@ -318,7 +418,7 @@ And show information use tooltip."
       (progn
         (forward-char 1)
         (recenter 0))                   ;adjust position
-    (message "Have reach first dictionary.")))
+    (message "Reached first dictionary.")))
 
 (defun sdcv-scroll-up-one-line ()
   "Scroll up one line."
@@ -346,44 +446,162 @@ And show information use tooltip."
   (ignore-errors
     (call-interactively 'previous-line arg)))
 
+(defun sdcv-check ()
+  "This function mainly detects the StarDict dictionary that does not exist,
+and eliminates the problem that cannot be translated."
+  (interactive)
+  (let* ((dict-name-infos
+          (cdr (split-string
+                (string-trim
+                 (shell-command-to-string
+                  (format "env LANG=zh_CN.UTF-8 %s --list-dicts --data-dir=%s" sdcv-program sdcv-dictionary-data-dir)))
+                "\n")))
+         (dict-names (mapcar (lambda (dict) (car (split-string dict "    "))) dict-name-infos))
+         (have-invalid-dict nil))
+    (if sdcv-dictionary-simple-list
+        (dolist (dict sdcv-dictionary-simple-list)
+          (unless (member dict dict-names)
+            (setq have-invalid-dict t)
+            (message
+             "sdcv-dictionary-simple-list: dictionary '%s' does not exist, remove it from sdcv-dictionary-simple-list or download the corresponding dictionary file to %s"
+             dict
+             sdcv-dictionary-data-dir)))
+      (setq have-invalid-dict t)
+      (message "sdcv-dictionary-simple-list is empty, command sdcv-search-simple won't work as expected."))
+    (if sdcv-dictionary-complete-list
+        (dolist (dict sdcv-dictionary-complete-list)
+          (unless (member dict dict-names)
+            (setq have-invalid-dict t)
+            (message
+             "sdcv-dictionary-complete-list: dictionary '%s' does not exist, remove it from sdcv-dictionary-complete-list or download the corresponding dictionary file to %s"
+             dict
+             sdcv-dictionary-data-dir)))
+      (setq have-invalid-dict t)
+      (message "sdcv-dictionary-complete-list is empty, command sdcv-search-detail won't work as expected."))
+    (unless have-invalid-dict
+      (message "The dictionary's settings look correct, sdcv should work as expected."))
+    ))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Utilities Functions ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun sdcv-search-detail (&optional word)
-  "Search WORD through the `command-line' tool sdcv.
-The result will be displayed in buffer named with
-`sdcv-buffer-name' with `sdcv-mode'."
-  (message "Search...")
+  "Search WORD in `sdcv-dictionary-complete-list'. The result
+will be displayed in buffer named with `sdcv-buffer-name' with
+`sdcv-mode'."
+  (message "Searching...")
   (with-current-buffer (get-buffer-create sdcv-buffer-name)
     (setq buffer-read-only nil)
     (erase-buffer)
-    (insert (sdcv-search-witch-dictionary
-             word
-             sdcv-dictionary-complete-list)))
-  (unless (eq (current-buffer) (sdcv-get-buffer))
-    (sdcv-goto-sdcv))
-  (sdcv-mode-reinit))
+    (setq sdcv-current-translate-object word)
+    (insert (sdcv-search-with-dictionary word
+                                         sdcv-dictionary-complete-list))
+    (sdcv-goto-sdcv)
+    (sdcv-mode-reinit)))
 
 (defun sdcv-search-simple (&optional word)
   "Search WORD simple translate result."
-  (popup-tip
-   (sdcv-search-witch-dictionary word sdcv-dictionary-simple-list)))
+  (let ((result (sdcv-search-with-dictionary word sdcv-dictionary-simple-list))
+        (posframe-mouse-banish nil))
+    ;; Show tooltip at point if word fetch from user cursor.
+    (posframe-show
+     sdcv-tooltip-name
+     :string result
+     :position (if (derived-mode-p 'eaf-mode) (mouse-absolute-pixel-position) (point))
+     :timeout sdcv-tooltip-timeout
+     :background-color (face-attribute 'sdcv-tooltip-face :background)
+     :foreground-color (face-attribute 'sdcv-tooltip-face :foreground)
+     :internal-border-width sdcv-tooltip-border-width
+     )
+    (unwind-protect
+	(push (read-event) unread-command-events)
+      (posframe-delete sdcv-tooltip-name))
+    ;; (add-hook 'post-command-hook 'sdcv-hide-tooltip-after-move)
+    (setq sdcv-tooltip-last-point (point))
+    (setq sdcv-tooltip-last-scroll-offset (window-start))
+    ))
 
-(defun sdcv-search-witch-dictionary (word dictionary-list)
+(defun sdcv-say-word (word)
+  (if (featurep 'cocoa)
+      (call-process-shell-command
+       (format "say %s" word) nil 0)
+    (let ((player (or (executable-find "mpv")
+                      (executable-find "mplayer")
+                      (executable-find "mpg123"))))
+      (if player
+          (start-process
+           player
+           nil
+           player
+           (format "http://dict.youdao.com/dictvoice?type=2&audio=%s" (url-hexify-string word)))
+        (message "mpv, mplayer or mpg123 is needed to play word voice")))))
+
+(defun sdcv-hide-tooltip-after-move ()
+  (ignore-errors
+    (when (get-buffer sdcv-tooltip-name)
+      (unless (and
+               (equal (point) sdcv-tooltip-last-point)
+               (equal (window-start) sdcv-tooltip-last-scroll-offset))
+        (posframe-delete sdcv-tooltip-name)
+        (kill-buffer sdcv-tooltip-name)))))
+
+(defun sdcv-search-with-dictionary (word dictionary-list)
   "Search some WORD with dictionary list.
 Argument DICTIONARY-LIST the word that need transform."
-  ;; Get translate object.
-  (or word (setq word (sdcv-region-or-word)))
-  ;; Record current translate object.
-  (setq sdcv-current-translate-object word)
+  (let (translate-result)
+    ;; Get translate object.
+    (or word (setq word (sdcv-region-or-word)))
 
-  ;; Return translate result.
-  (let (cmd)
-    (sdcv-filter
-     (mapconcat
-      (lambda (dict)
-        (setq cmd (format "sdcv -n -u \"%s\" \"%s\"" dict word))
-        (shell-command-to-string cmd))
-      dictionary-list "\n")
-     )))
+    ;; Record current translate object.
+    (setq sdcv-current-translate-object word)
+    ;; Get translate result.
+    (setq translate-result (sdcv-translate-result word dictionary-list))
+
+    (if (string-equal translate-result "")
+        ;; Try pick word from camelcase string and translate again if no translate result for current string.
+        (progn
+          (setq word (sdcv-pick-word word))
+          (if sdcv-say-word-p (sdcv-say-word word))
+          (sdcv-translate-result word dictionary-list))
+      ;; Otherwise return translate result of current word.
+      (if sdcv-say-word-p (sdcv-say-word word))
+      translate-result)))
+
+(defun sdcv-pick-word (str)
+  (let ((case-fold-search nil)
+        (search-index 0)
+        words
+        char-offset)
+    (setq char-offset
+          (- (point)
+             (save-excursion
+               (backward-word)
+               (point)
+               )))
+    (setq str (replace-regexp-in-string "\\([a-z0-9]\\)\\([A-Z]\\)" "\\1_\\2" str))
+    (setq str (replace-regexp-in-string "\\([A-Z]+\\)\\([A-Z][a-z]\\)" "\\1_\\2" str))
+    (setq str (replace-regexp-in-string "-" "_" str))
+    (setq str (replace-regexp-in-string "_+" "_" str))
+    (setq words (split-string (downcase str) "_"))
+    (dolist (word words)
+      (if (and (>= char-offset search-index)
+               (<= char-offset (+ search-index (length word))))
+          (return word)
+        (setq search-index (+ search-index (length word))))
+      )))
+
+(defun sdcv-translate-result (word dictionary-list)
+  "Call sdcv to search word in dictionary list, return filtered
+string of results."
+  (sdcv-filter
+   (shell-command-to-string
+    ;; Set LANG environment variable, make sure `shell-command-to-string' can handle CJK character correctly.
+    ;; (format "env LANG=zh_CN.UTF-8 %s -x -n %s %s --data-dir=%s"
+    (format "%s -0 -n %s --data-dir=%s"
+            sdcv-program
+            ;; (mapconcat (lambda (dict)
+            ;;              (concat "-u \"" dict "\""))
+            ;;            dictionary-list " ")
+            (format "\"%s\"" word)
+            sdcv-dictionary-data-dir))))
 
 (defun sdcv-filter (sdcv-string)
   "This function is for filter sdcv output string,.
@@ -394,7 +612,7 @@ Argument SDCV-STRING the search string from sdcv."
     (with-temp-buffer
       (insert sdcv-string)
       (goto-char (point-min))
-      (kill-line 1)                     ;remove unnecessary information.
+      (kill-line 1)                   ;remove unnecessary information.
       (buffer-string))))
 
 (defun sdcv-goto-sdcv ()
@@ -423,7 +641,7 @@ the beginning of the buffer."
     (goto-char (point-min))
     (sdcv-next-dictionary)
     (show-all)
-    (message "Have search finished with `%s'." sdcv-current-translate-object)))
+    (message "Finished searching `%s'." sdcv-current-translate-object)))
 
 (defun sdcv-prompt-input ()
   "Prompt input object for translate."
@@ -444,5 +662,5 @@ Otherwise return word around point."
 
 ;;; sdcv.el ends here
 
-;;; LocalWords:  sdcv StartDict startdict showtip stardict KDic XDICT CDICT
+;;; LocalWords:  sdcv StartDict startdict posframe stardict KDic XDICT CDICT
 ;;; LocalWords:  FOLDOC WordNet ChiYuan Hideshow reinit
