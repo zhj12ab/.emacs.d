@@ -595,7 +595,7 @@ string of results."
    (shell-command-to-string
     ;; Set LANG environment variable, make sure `shell-command-to-string' can handle CJK character correctly.
     ;; (format "env LANG=zh_CN.UTF-8 %s -x -n %s %s --data-dir=%s"
-    (format "%s -0 -n %s --data-dir=%s"
+    (format "env LANG=zh_CN.UTF-8 %s -0 -1 -n %s --data-dir=%s"
             sdcv-program
             ;; (mapconcat (lambda (dict)
             ;;              (concat "-u \"" dict "\""))
