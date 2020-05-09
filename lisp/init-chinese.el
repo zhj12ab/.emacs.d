@@ -40,7 +40,7 @@
 ;; }}
 
 ;; {{ pyim
-(defvar my-pyim-directory "~/.eim"
+(defvar my-pyim-directory (expand-file-name (concat my-emacs-d ".eim"))
   "The directory containing pyim dictionaries.")
 
 (with-eval-after-load 'pyim

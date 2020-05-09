@@ -37,16 +37,14 @@
 (set-fontset-font "fontset-default" 'gb18030'("等距更纱黑体 T SC". "unicode-bmp"))
 (dolist (param '((font . "等距更纱黑体 T SC")))
   (add-to-list 'default-frame-alist param)
-  (add-to-list 'initial-frame-alist param)
-  )
+  (add-to-list 'initial-frame-alist param))
   )
 (when *linux*
 (set-fontset-font "fontset-default" 'unicode'("Sarasa Mono T SC"))
 (set-fontset-font "fontset-default" 'gb18030'("Sarasa Mono T SC". "unicode-bmp"))
 (dolist (param '((font . "Sarasa Mono T SC")))
   (add-to-list 'default-frame-alist param)
-  (add-to-list 'initial-frame-alist param)
-  )
+  (add-to-list 'initial-frame-alist param))
   )
 ;; ;; 设置字体
 ;; ;; Setting English Font
@@ -262,11 +260,11 @@
 (setq default-process-coding-system '(utf-8 . utf-8))
 
 
+(setq sdcv-dictionary-data-dir (expand-file-name (concat my-emacs-d ".stardict")))
+
 ;; 配置路径
 (when *win64*
 (setenv "PATH" "C:\\extern_exec;C:\\extern_exec\\Aspell\\bin;C:\\extern_exec\\glo663wb\\bin;C:\\cygwin64\\bin;C:\\msys64\\mingw64\\bin;C:\\msys64\\usr\\bin;C:\\Windows\\System32;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0")
 ;; 配置sdcv
 (setq sdcv-program "C:\\cygwin64\\bin\\sdcv.exe")
-;; (setq sdcv-dictionary-data-dir "C:\\extern_exec\\stardict")
-;; (setq sdcv-dictionary-data-dir (file-truename "~/.stardict/dic"))
  )
