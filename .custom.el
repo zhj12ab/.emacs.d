@@ -311,8 +311,15 @@
 (prefer-coding-system 'utf-8)
 (setq default-process-coding-system '(utf-8 . utf-8))
 
-
 (setq sdcv-dictionary-data-dir (expand-file-name (concat my-emacs-d ".stardict")))
+
+;; export ort to docx
+(defun org-export-docx ()
+  (interactive)
+  (let ((docx-file (concat (file-name-sans-extension (buffer-file-name)) ".docx"))
+           (template-file "~/.emacs.d/template/template.docx"))
+    (shell-command (format "pandoc %s -o %s --reference-doc=%s" (buffer-file-name) docx-file template-file))
+    (message "Convert finish: %s" docx-file)))
 
 ;; 配置路径
 (when *win64*

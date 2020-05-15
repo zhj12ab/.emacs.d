@@ -1,0 +1,10 @@
+;;;; Emacs Bookmark Format Version 1 ;;;; -*- coding: utf-8-emacs -*-
+;;; This format is meant to be slightly human-readable;
+;;; nevertheless, you probably don't want to edit it.
+;;; -*- End Of Bookmark File Format Version Stamp -*-
+(("ROM_Format.asm"
+ (filename . "f:/work/沃尔沃/智能版/file/ROM_Format.asm")
+ (front-context-string . "SUB_EX_338C:\n   ")
+ (rear-context-string . "P     SUB_3B24\n\n")
+ (position . 16841))
+)
