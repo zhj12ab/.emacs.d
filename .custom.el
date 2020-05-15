@@ -29,7 +29,7 @@
 
 ;; 设置用户名与邮箱
 (setq user-full-name "HuaJianZeng")
-(setq user-mail-address "zhj12ab@gmail.com")
+(setq user-mail-address "zhj12ab@163.com")
 
 ;; 设置字体
 (when *win64*
@@ -39,6 +39,7 @@
   (add-to-list 'default-frame-alist param)
   (add-to-list 'initial-frame-alist param))
   )
+
 (when *linux*
 (set-fontset-font "fontset-default" 'unicode'("Sarasa Mono T SC"))
 (set-fontset-font "fontset-default" 'gb18030'("Sarasa Mono T SC". "unicode-bmp"))
@@ -134,7 +135,8 @@
 (defun zenghuajian/astyle (start end)
   (setq astyle-command "astyle -A1Lfpjk3NS")
   (setq astyle-nowlinenum (line-number-at-pos))
-  "Run astyle on region or buffer"
+  ;; (save-buffer)
+  ;; "Run astyle on region or buffer"
   (interactive (if mark-active
                    (list (region-beginning) (region-end))
                  (list (point-min) (point-max))
@@ -143,7 +145,8 @@
     (shell-command-on-region start end
                              astyle-command
                              (current-buffer) t
-                             (get-buffer-create "*Astyle Errors*") t))
+;;                             (get-buffer-create "*Astyle Errors*") t
+                             ))
   (goto-char 1)
   (forward-line astyle-nowlinenum))
 
@@ -155,37 +158,86 @@
 (use-package lsp-mode
   :commands lsp
   :init
-  (setq lsp-auto-guess-root t)
-  (setq lsp-prefer-flymake t)
-  (setq lsp-restart 'auto-restart)
-  (setq lsp-log-io nil)
-  (setq lsp-enable-folding nil)
-  (setq lsp-enable-snippet nil)
-  (setq lsp-enable-symbol-highlighting nil)
-  (setq lsp-enable-links nil)
+  ;; @see https://github.com/emacs-lsp/lsp-mode#performance
+  (setq read-process-output-max (* 1024 1024)) ;; 1MB
+  (setq lsp-auto-guess-root t
+  lsp-prefer-flymake nil
+  lsp-restart 'auto-restart
+  lsp-signature-auto-activate nil
+  lsp-log-io nil
+  lsp-enable-file-watchers nil
+  lsp-enable-folding nil
+  lsp-enable-snippet nil
+  lsp-enable-on-type-formatting nil
+  lsp-enable-symbol-highlighting nil
+  lsp-enable-links nil)
   :config
+  (with-no-warnings
+    (defun my-lsp--init-if-visible (func &rest args)
+      "Not enabling lsp in `git-timemachine-mode'."
+      (unless (bound-and-true-p git-timemachine-mode)
+        (apply func args)))
+    (advice-add #'lsp--init-if-visible :around #'my-lsp--init-if-visible))
   (require 'lsp-clients)
   )
-(use-package lsp-ui :commands lsp-ui-mode)
+
+;; (use-package lsp-ui :commands lsp-ui-mode)
+(use-package lsp-ui
+  :custom-face
+  (lsp-ui-sideline-code-action ((t (:inherit warning))))
+  :hook (lsp-mode . lsp-ui-mode)
+  :init (setq lsp-ui-doc-enable nil
+              lsp-ui-doc-use-webkit nil
+              lsp-ui-doc-delay 0.2
+              lsp-ui-doc-include-signature t
+              lsp-ui-doc-position 'at-point
+              lsp-ui-doc-border (face-foreground 'default)
+              lsp-eldoc-enable-hover t ; Disable eldoc displays in minibuffer
+
+              lsp-ui-sideline-enable t
+              lsp-ui-sideline-show-hover t
+              lsp-ui-sideline-show-diagnostics t
+              lsp-ui-sideline-show-code-actions t
+              lsp-ui-sideline-ignore-duplicate t
+
+              lsp-ui-imenu-enable t
+              lsp-ui-imenu-colors `(,(face-foreground 'font-lock-keyword-face)
+                                    ,(face-foreground 'font-lock-string-face)
+                                    ,(face-foreground 'font-lock-constant-face)
+                                    ,(face-foreground 'font-lock-variable-name-face)))
+  :config
+  (add-to-list 'lsp-ui-doc-frame-parameters '(right-fringe . 8))
+
+  ;; `C-g'to close doc
+  (advice-add #'keyboard-quit :before #'lsp-ui-doc-hide)
+
+  ;; Reset `lsp-ui-doc-background' after loading theme
+  (add-hook 'after-load-theme-hook
+            (lambda ()
+              (setq lsp-ui-doc-border (face-foreground 'default))
+              (set-face-background 'lsp-ui-doc-background
+                                   (face-background 'tooltip)))))
+
+;; company-lsp
 (use-package company-lsp :commands company-lsp)
 ;; if you are ivy user
 (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
 (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
 
 (use-package ccls
+  :init
+  ;;(evil-set-initial-state 'ccls--tree-mode 'emacs)
+  ;;evil-record-macro keybinding clobbers q in cquery-tree-mode-map for some reason?
+  ;;(evil-make-overriding-map 'ccls-tree-mode-map)
+  (set (make-local-variable 'lsp-disabled-clients) '(clangd cquery))
+  ;; 高亮
+  (setq ccls-sem-highlight-method 'font-lock)
   :hook ((c-mode cc-mode c++-mode objc-mode cuda-mode) .
          (lambda () (require 'ccls) (lsp))))
 
-;;(evil-set-initial-state 'ccls--tree-mode 'emacs)
-;;evil-record-macro keybinding clobbers q in cquery-tree-mode-map for some reason?
-;;(evil-make-overriding-map 'ccls-tree-mode-map)
-(set (make-local-variable 'lsp-disabled-clients) '(clangd cquery))
-;; 高亮
-(setq ccls-sem-highlight-method 'font-lock)
 (ccls-use-default-rainbow-sem-highlight)
 
 ;; flymake disable??
-(setq lsp-prefer-flymake nil)
 (setq-default flycheck-disabled-checkers '(c/c++-clang c/c++-cppcheck c/c++-gcc))
 
 ;; 补全显示
@@ -268,3 +320,5 @@
 ;; 配置sdcv
 (setq sdcv-program "C:\\cygwin64\\bin\\sdcv.exe")
  )
+
+;; end of .custom.el
