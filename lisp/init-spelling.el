@@ -10,12 +10,11 @@
 
 (with-eval-after-load 'flyspell
   ;; {{ flyspell setup for web-mode
-  (defun web-mode-flyspell-verify ()
+  (defun my-web-mode-flyspell-verify ()
     (let* ((f (get-text-property (- (point) 1) 'face))
            rlt)
       (cond
-       ;; Check the words with these font faces, possibly.
-       ;; This *blacklist* will be tweaked in next condition
+       ;; Check the words whose font face is NOT in below *blacklist*
        ((not (memq f '(web-mode-html-attr-value-face
                        web-mode-html-tag-face
                        web-mode-html-attr-name-face
@@ -41,8 +40,9 @@
        ;; finalize the blacklist
        (t
         (setq rlt nil)))
+      ;; If rlt is t, it's a typo. If nil, not a typo.
       rlt))
-  (put 'web-mode 'flyspell-mode-predicate 'web-mode-flyspell-verify)
+  (put 'web-mode 'flyspell-mode-predicate 'my-web-mode-flyspell-verify)
   ;; }}
 
   ;; better performance
@@ -82,7 +82,7 @@ Please note RUN-TOGETHER makes aspell less capable.  So it should be used in `pr
           (cond
            ;; Kevin Atkinson said now aspell supports camel case directly
            ;; https://github.com/redguardtoo/emacs.d/issues/796
-           ((string-match-p "--camel-case"
+           ((string-match-p "--.*camel-case"
                             (shell-command-to-string (concat ispell-program-name " --help")))
             (setq args (append args '("--camel-case"))))
 
@@ -168,20 +168,13 @@ Please note RUN-TOGETHER makes aspell less capable.  So it should be used in `pr
 
 (defun text-mode-hook-setup ()
   ;; Turn off RUN-TOGETHER option when spell check text-mode
-  (setq-local ispell-extra-args (flyspell-detect-ispell-args)))
-(add-hook 'text-mode-hook 'text-mode-hook-setup)
+  (setq-local ispell-extra-args (flyspell-detect-ispell-args))
 
-(defun enable-flyspell-mode-conditionally (&optional turn-off)
-  "Enable `flyspell-mode'.  If TURN-OFF is t, turn off it at the end."
-  (when (and (not *no-memory*)
-             ispell-program-name
-             (executable-find ispell-program-name))
-    ;; I don't use flyspell in text-mode because I often use Chinese.
-    ;; I'd rather manually spell check the English text
-    (flyspell-mode 1)
-    ;; The purpose to turn on and turn off `flyspell-mode' is to load some
-    ;; major mode's own predicate
-    (if turn-off (flyspell-mode -1))))
+  ;; since `wucuo-flyspell-start-mode' is "ultra", no worry about
+  ;; performance at all.
+  (my-ensure 'wucuo)
+  (wucuo-start t))
+(add-hook 'text-mode-hook 'text-mode-hook-setup)
 
 ;; You can also use "M-x ispell-word" or hotkey "M-$". It pop up a multiple choice
 ;; @see http://frequal.com/Perspectives/EmacsTip03-FlyspellAutoCorrectWord.html
@@ -266,9 +259,9 @@ Please note RUN-TOGETHER makes aspell less capable.  So it should be used in `pr
   ;; }}
 
   ;; do NOT turn on `flyspell-mode' automatically.
-  ;; use `flyspell-buffer' instead
-  (setq wucuo-flyspell-start-mode "lite")
-  ;; spell check buffer every 10 mins
-  (setq wucuo-update-interval 600))
+  ;; check buffer or visible region only
+  (setq wucuo-flyspell-start-mode "ultra")
+  ;; spell check buffer every 30 seconds
+  (setq wucuo-update-interval 30))
 
 (provide 'init-spelling)

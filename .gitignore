@@ -67,3 +67,5 @@ network-security.data
 nov-places
 transient/
 /.lsp-session-v1
+elpy/
+/bookmarks
