@@ -84,7 +84,6 @@
   "TAB" 'evil-switch-to-windows-last-buffer
   "bb" 'counsel-switch-buffer
   "bd" 'evil-delete-buffer
-  "bm" 'toggle-full-window
   ;; file setting
   "fr" 'my-counsel-recentf
   "ff" 'counsel-find-file
@@ -93,10 +92,8 @@
   "fed" 'open-init-file
   ;; switch to cpp h
   ;; "sw" 'switch-source-file
-  ;; comment
-  "cl" 'evilnc-comment-or-uncomment-lines
+
   ;; windows setting
-  "w TAB" 'ace-window
   "ws" 'ace-swap-window
   "wd" 'delete-windows-on
   "wm" 'delete-other-windows
@@ -106,6 +103,9 @@
   "wh" 'evil-window-left
   "wj" 'evil-window-down
   "wk" 'evil-window-up)
+
+;; (define-key company-active-map (kbd "C-n") (lambda () (interactive) (company-complete-common-or-cycle 1)))
+;; (define-key company-active-map (kbd "C-p") (lambda () (interactive) (company-complete-common-or-cycle -1)))
 
 ;;定义在cpp文件和.h文件中切换的函数
 ;;;###autoload
@@ -328,4 +328,11 @@
 (setq sdcv-program "C:\\cygwin64\\bin\\sdcv.exe")
  )
 
+;; evil-numbers
+(require 'evil-numbers)
+(define-key evil-normal-state-map (kbd "C-c a") 'evil-numbers/inc-at-pt)
+(define-key evil-visual-state-map (kbd "C-c a") 'evil-numbers/inc-at-pt)
+
+(define-key evil-normal-state-map (kbd "C-c d") 'evil-numbers/dec-at-pt)
+(define-key evil-visual-state-map (kbd "C-c d") 'evil-numbers/dec-at-pt)
 ;; end of .custom.el
