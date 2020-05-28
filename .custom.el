@@ -153,6 +153,7 @@
 ;; 使用use-package
 (require-package 'use-package)
 (require-package 'ccls)
+(require-package 'lsp-ui)
 
 ;; 设置ccls 和 lsp
 (use-package lsp-mode
