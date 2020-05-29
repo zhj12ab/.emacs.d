@@ -84,6 +84,11 @@
   "TAB" 'evil-switch-to-windows-last-buffer
   "bb" 'counsel-switch-buffer
   "bd" 'evil-delete-buffer
+  ;; lsp-rename
+  "lr" 'lsp-rename
+  ;; goto define
+  "lfd" 'lsp-find-definition
+  "lfr" 'lsp-find-references
   ;; file setting
   "fr" 'my-counsel-recentf
   "ff" 'counsel-find-file
@@ -91,7 +96,7 @@
   "fS" 'save-some-buffers
   "fed" 'open-init-file
   ;; switch to cpp h
-  ;; "sw" 'switch-source-file
+  "sw" 'ff-find-other-file
 
   ;; windows setting
   "ws" 'ace-swap-window
@@ -106,18 +111,6 @@
 
 ;; (define-key company-active-map (kbd "C-n") (lambda () (interactive) (company-complete-common-or-cycle 1)))
 ;; (define-key company-active-map (kbd "C-p") (lambda () (interactive) (company-complete-common-or-cycle -1)))
-
-;;定义在cpp文件和.h文件中切换的函数
-;;;###autoload
-;; (defun switch-source-file ()
-;;   (interactive)
-;;   (setq file-name (buffer-file-name))
-;;   (if (string-match "//.cpp" file-name)
-;;       (find-file (replace-regexp-in-string "//.cpp" "/.h" file-name)))
-;;   (if (string-match "//.c" file-name)
-;;       (find-file (replace-regexp-in-string "//.c" "/.h" file-name)))
-;;   (if (string-match "//.h" file-name)
-;;       (find-file (replace-regexp-in-string "//.h" "/.cpp" file-name))))
 
 ;; 打开配置文件
 (defun open-init-file ()

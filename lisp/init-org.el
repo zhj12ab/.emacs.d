@@ -221,6 +221,7 @@ skip user's own code in `org-mode-hook'."
         org-refile-use-outline-path 'file
         org-outline-path-complete-in-steps nil
         org-todo-keywords (quote ((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d!/!)")
+                                  (sequence "REPORT(r)" "BUG(b)" "KNOWCAUSE(k)" "|" "FIXED(f)")
                                   (sequence "WAITING(w@/!)" "SOMEDAY(S)" "PROJECT(P@)" "|" "CANCELLED(c@/!)")))
         org-imenu-depth 9
         ;; @see http://irreal.org/blog/1
