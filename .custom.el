@@ -329,4 +329,11 @@
 
 (define-key evil-normal-state-map (kbd "C-c d") 'evil-numbers/dec-at-pt)
 (define-key evil-visual-state-map (kbd "C-c d") 'evil-numbers/dec-at-pt)
+
+;; org 对齐
+(require 'valign)
+;; 中英文折行
+(require 'flywrap)
+;; 禁止生成lockfile
+(setq create-lockfiles nil) 
 ;; end of .custom.el
