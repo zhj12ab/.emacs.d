@@ -280,7 +280,7 @@ If candidates number is bigger than this value, show raw candidates without clea
     ".tox"
     ;; vscode
     ".vscode"
-    ;; ccls
+    ;; ccls-cache
     ".ccls-cache"
     ;; emacs
     ".cask")
