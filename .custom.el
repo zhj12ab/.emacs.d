@@ -67,8 +67,10 @@
 (add-hook 'emacs-lisp-mode-hook 'show-paren-mode)
 
 ;; 主题配置
+(require-package 'dracula-theme)
 ;; (load-theme 'solarized-dark t)
-(load-theme 'doom-molokai t)
+;; (load-theme 'doom-molokai t)
+(load-theme 'dracula t)
 
 
 ;; 新快捷键设置
