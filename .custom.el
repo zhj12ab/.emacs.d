@@ -338,4 +338,11 @@
 (require 'flywrap)
 ;; 禁止生成lockfile
 (setq create-lockfiles nil) 
+
+;; doom-modeline
+(require-package 'doom-modeline)
+(use-package doom-modeline
+  :ensure t
+  :init (doom-modeline-mode 1))
+
 ;; end of .custom.el

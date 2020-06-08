@@ -99,7 +99,8 @@
   (require-init 'init-autoload)
   ;; `package-initialize' takes 35% of startup time
   ;; need check https://github.com/hlissner/doom-emacs/wiki/FAQ#how-is-dooms-startup-so-fast for solution
-  (require-init 'init-modeline)
+
+  ;; (require-init 'init-modeline)
   (require-init 'init-utils)
   (require-init 'init-file-type)
   (require-init 'init-elpa)
