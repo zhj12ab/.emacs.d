@@ -376,8 +376,8 @@
 ;; Icons
 ;; NOTE: Must run `M-x all-the-icons-install-fonts', and install fonts manually on Windows
 (use-package all-the-icons
-  :init (unless (or *win64* (font-installed-p "all-the-icons"))
-          (all-the-icons-install-fonts t))
+  ;; :init (unless (or *win64* (font-installed-p "all-the-icons"))
+  ;;         (all-the-icons-install-fonts t))
   :config
   (declare-function memoize 'memoize)
   (declare-function memoize-restore 'memoize)
