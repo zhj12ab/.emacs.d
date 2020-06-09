@@ -122,9 +122,6 @@
 ;; if not set, the OS locale is used.
 (setq system-time-locale "C")
 
-;; 配置esc 为3个esc
-(global-set-key (kbd "<escape>")      'keyboard-escape-quit)
-
 ;; 使用astyl 格式化
 (defun zenghuajian/astyle (start end)
   (setq astyle-command "astyle -A1Lfpjk3NS")
