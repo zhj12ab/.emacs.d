@@ -100,7 +100,7 @@
   ;; `package-initialize' takes 35% of startup time
   ;; need check https://github.com/hlissner/doom-emacs/wiki/FAQ#how-is-dooms-startup-so-fast for solution
 
-  (require-init 'init-modeline)
+  ;; (require-init 'init-modeline)
   (require-init 'init-utils)
   (require-init 'init-file-type)
   (require-init 'init-elpa)
@@ -130,7 +130,7 @@
   (require-init 'init-bbdb t)
   (require-init 'init-gnus t)
   (require-init 'init-lua-mode t)
-  (require-init 'init-workgroups2 t) ; use native API in lightweight mode
+  ;; (require-init 'init-workgroups2 t) ; use native API in lightweight mode
   (require-init 'init-term-mode t)
   (require-init 'init-web-mode t)
   (require-init 'init-company t)
@@ -143,7 +143,7 @@
 
   ;; don't play with color-theme in light weight mode
   ;; color themes are already installed in `init-elpa.el'
-  (require-init 'init-theme)
+  ;; (require-init 'init-theme)
 
   ;; misc has some crucial tools I need immediately
   (require-init 'init-essential)

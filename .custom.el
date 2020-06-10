@@ -31,22 +31,18 @@
 (setq user-full-name "HuaJianZeng")
 (setq user-mail-address "zhj12ab@163.com")
 
-;; 设置字体
-(when *win64*
-(set-fontset-font "fontset-default" 'unicode'("等距更纱黑体 T SC"))
-(set-fontset-font "fontset-default" 'gb18030'("等距更纱黑体 T SC". "unicode-bmp"))
-(dolist (param '((font . "等距更纱黑体 T SC")))
-  (add-to-list 'default-frame-alist param)
-  (add-to-list 'initial-frame-alist param))
-  )
+;; 主题配置
+;; (load-theme 'doom-solarized-dark t)
+;; (load-theme 'doom-dark+ t)
+;; (load-theme 'doom-molokai t)
+(load-theme 'doom-dracula t)
 
-(when *linux*
 (set-fontset-font "fontset-default" 'unicode'("Sarasa Mono T SC"))
 (set-fontset-font "fontset-default" 'gb18030'("Sarasa Mono T SC". "unicode-bmp"))
 (dolist (param '((font . "Sarasa Mono T SC")))
   (add-to-list 'default-frame-alist param)
   (add-to-list 'initial-frame-alist param))
-  )
+
 ;; ;; 设置字体
 ;; ;; Setting English Font
 ;; (set-face-attribute
@@ -57,6 +53,8 @@
 ;;             charset
 ;;             (font-spec :family "Microsoft Yahei" :size 14)))
 
+(global-set-key (kbd "<escape>")      'keyboard-escape-quit)
+
 ;; 默认全屏
 (setq initial-frame-alist (quote ((fullscreen . maximized))))
 ;; 高亮当前行
@@ -65,12 +63,6 @@
 (setq make-backup-files nil)
 ;; 启用自动括号匹配
 (add-hook 'emacs-lisp-mode-hook 'show-paren-mode)
-
-;; 主题配置
-(load-theme 'doom-solarized-dark t)
-;; (load-theme 'doom-dark+ t)
-;; (load-theme 'doom-molokai t)
-;; (load-theme 'doom-dracula t)
 
 ;; 新快捷键设置
 (my-space-leader-def
@@ -135,18 +127,16 @@
   (save-restriction
     (shell-command-on-region start end
                              astyle-command
-                             (current-buffer) t
-;;                             (get-buffer-create "*Astyle Errors*") t
-                             ))
+                             (current-buffer) t))
   (goto-char 1)
   (forward-line astyle-nowlinenum))
 
 ;; 配置路径
 (when *win64*
-(setenv "PATH" "C:\\extern_exec;C:\\extern_exec\\Aspell\\bin;C:\\extern_exec\\glo663wb\\bin;C:\\cygwin64\\bin;C:\\msys64\\mingw64\\bin;C:\\msys64\\usr\\bin;C:\\Windows\\System32;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0")
-;; 配置sdcv
-(setq sdcv-program "C:\\cygwin64\\bin\\sdcv.exe")
- )
+  (setenv "PATH" "C:\\extern_exec;C:\\extern_exec\\Aspell\\bin;C:\\extern_exec\\glo663wb\\bin;C:\\cygwin64\\bin;C:\\msys64\\mingw64\\bin;C:\\msys64\\usr\\bin;C:\\Windows\\System32;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0")
+  ;; 配置sdcv
+  (setq sdcv-program "C:\\cygwin64\\bin\\sdcv.exe")
+  )
 
 ;; 使用use-package
 (require-package 'use-package)
@@ -154,6 +144,8 @@
 (require-package 'lsp-ui)
 (require-package 'doom-modeline)
 (require-package 'centaur-tabs)
+(require-package 'hide-mode-line)
+(require-package 'solaire-mode)
 
 ;; 设置ccls 和 lsp
 (use-package lsp-mode
@@ -162,16 +154,16 @@
   ;; @see https://github.com/emacs-lsp/lsp-mode#performance
   (setq read-process-output-max (* 1024 1024)) ;; 1MB
   (setq lsp-auto-guess-root t
-  lsp-prefer-flymake nil
-  lsp-restart 'auto-restart
-  lsp-signature-auto-activate nil
-  lsp-log-io nil
-  lsp-enable-file-watchers nil
-  lsp-enable-folding nil
-  lsp-enable-snippet nil
-  lsp-enable-on-type-formatting nil
-  lsp-enable-symbol-highlighting nil
-  lsp-enable-links nil)
+        lsp-prefer-flymake nil
+        lsp-restart 'auto-restart
+        lsp-signature-auto-activate nil
+        lsp-log-io nil
+        lsp-enable-file-watchers nil
+        lsp-enable-folding nil
+        lsp-enable-snippet nil
+        lsp-enable-on-type-formatting nil
+        lsp-enable-symbol-highlighting nil
+        lsp-enable-links nil)
   :config
   (with-no-warnings
     (defun my-lsp--init-if-visible (func &rest args)
@@ -253,10 +245,10 @@
   "Quiet down messages in adviced OLDFUN."
   (let ((message-off (make-symbol "message-off")))
     (unwind-protect
-    (progn
-      (advice-add #'message :around #'ignore (list 'name message-off))
-      (apply oldfun args))
-    (advice-remove #'message message-off))))
+        (progn
+          (advice-add #'message :around #'ignore (list 'name message-off))
+          (apply oldfun args))
+      (advice-remove #'message message-off))))
 
 (advice-add #'ispell-init-process :around #'message-off-advice)
 
@@ -319,7 +311,7 @@
 (defun org-export-docx ()
   (interactive)
   (let ((docx-file (concat (file-name-sans-extension (buffer-file-name)) ".docx"))
-           (template-file "~/.emacs.d/template/template.docx"))
+        (template-file "~/.emacs.d/template/template.docx"))
     (shell-command (format "pandoc %s -o %s --reference-doc=%s" (buffer-file-name) docx-file template-file))
     (message "Convert finish: %s" docx-file)))
 
@@ -336,20 +328,31 @@
 ;; 中英文折行
 (require 'flywrap)
 ;; 禁止生成lockfile
-(setq create-lockfiles nil) 
+(setq create-lockfiles nil)
+
+;; solaire-mode
+(use-package solaire-mode
+  :functions persp-load-state-from-file
+  :hook (((change-major-mode after-revert ediff-prepare-buffer) . turn-on-solaire-mode)
+         (minibuffer-setup . solaire-mode-in-minibuffer)
+         (after-load-theme . solaire-mode-swap-bg))
+  :init
+  (solaire-global-mode 1)
+  (advice-add #'persp-load-state-from-file
+              :after #'solaire-mode-restore-persp-mode-buffers))
 
 ;; doom-theme
 (use-package doom-themes
-        :custom-face
-        (doom-modeline-buffer-file ((t (:inherit (mode-line bold)))))
-        :custom
-        (doom-themes-treemacs-theme "doom-colors")
-        :config
-        ;; Enable flashing mode-line on errors
-        (doom-themes-visual-bell-config)
+  :custom-face
+  (doom-modeline-buffer-file ((t (:inherit (mode-line bold)))))
+  :custom
+  (doom-themes-treemacs-theme "doom-colors")
+  :config
+  ;; Enable flashing mode-line on errors
+  (doom-themes-visual-bell-config)
 
-        ;; Enable customized theme
-        (doom-themes-treemacs-config))
+  ;; Enable customized theme
+  (doom-themes-treemacs-config))
 
 ;; doom-modeline
 (use-package doom-modeline
@@ -358,6 +361,9 @@
   :hook
   (after-init . doom-modeline-mode)
   :custom
+  (create-fontset-from-ascii-font "Sarasa Mono T SC:medium" nil "modeline")
+  (set-face-attribute 'mode-line nil :height 120 :fontset "fontset-modeline")
+  (set-face-attribute 'mode-line-inactive nil :height 120 :fontset "fontset-modeline")
   (doom-modeline-icon t)
   (doom-modeline-unicode-fallback t)
   (doom-modeline-minor-modes nil)
@@ -368,7 +374,6 @@
     (setq doom-modeline--default-format mode-line-format)
     (setq-default mode-line-format nil)))
 
-(require-package 'hide-mode-line)
 (use-package hide-mode-line
   :hook (((completion-list-mode
            completion-in-region-mode
@@ -489,4 +494,5 @@
   :bind
   ("C-<prior>" . centaur-tabs-backward)
   ("C-<next>" . centaur-tabs-forward))
+
 ;; end of .custom.el
