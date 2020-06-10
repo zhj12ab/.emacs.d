@@ -141,10 +141,19 @@
   (goto-char 1)
   (forward-line astyle-nowlinenum))
 
+;; 配置路径
+(when *win64*
+(setenv "PATH" "C:\\extern_exec;C:\\extern_exec\\Aspell\\bin;C:\\extern_exec\\glo663wb\\bin;C:\\cygwin64\\bin;C:\\msys64\\mingw64\\bin;C:\\msys64\\usr\\bin;C:\\Windows\\System32;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0")
+;; 配置sdcv
+(setq sdcv-program "C:\\cygwin64\\bin\\sdcv.exe")
+ )
+
 ;; 使用use-package
 (require-package 'use-package)
 (require-package 'ccls)
 (require-package 'lsp-ui)
+(require-package 'doom-modeline)
+(require-package 'centaur-tabs)
 
 ;; 设置ccls 和 lsp
 (use-package lsp-mode
@@ -303,6 +312,7 @@
 (prefer-coding-system 'utf-8)
 (setq default-process-coding-system '(utf-8 . utf-8))
 
+;; sdcv
 (setq sdcv-dictionary-data-dir (expand-file-name (concat my-emacs-d ".stardict")))
 
 ;; export ort to docx
@@ -312,13 +322,6 @@
            (template-file "~/.emacs.d/template/template.docx"))
     (shell-command (format "pandoc %s -o %s --reference-doc=%s" (buffer-file-name) docx-file template-file))
     (message "Convert finish: %s" docx-file)))
-
-;; 配置路径
-(when *win64*
-(setenv "PATH" "C:\\extern_exec;C:\\extern_exec\\Aspell\\bin;C:\\extern_exec\\glo663wb\\bin;C:\\cygwin64\\bin;C:\\msys64\\mingw64\\bin;C:\\msys64\\usr\\bin;C:\\Windows\\System32;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0")
-;; 配置sdcv
-(setq sdcv-program "C:\\cygwin64\\bin\\sdcv.exe")
- )
 
 ;; evil-numbers
 (require 'evil-numbers)
@@ -349,7 +352,6 @@
         (doom-themes-treemacs-config))
 
 ;; doom-modeline
-(require-package 'doom-modeline)
 (use-package doom-modeline
   :ensure t
   :defer t
@@ -480,7 +482,6 @@
   (add-to-list 'all-the-icons-mode-icon-alist
                '(gfm-mode all-the-icons-octicon "markdown" :face all-the-icons-lblue)))
 
-(require-package 'centaur-tabs)
 (use-package centaur-tabs
   :demand
   :config
