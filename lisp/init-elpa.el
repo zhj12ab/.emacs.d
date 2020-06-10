@@ -451,22 +451,22 @@ You still need modify `package-archives' in \"init-elpa.el\" to PERMANENTLY use 
      subatomic-theme
      subatomic256-theme
      sublime-themes
-     sunny-day-theme
-     tango-2-theme
-     tango-plus-theme
-     tangotango-theme
-     tao-theme
-     toxi-theme
-     twilight-anti-bright-theme
-     twilight-bright-theme
-     twilight-theme
-     ujelly-theme
-     underwater-theme
+     ;; sunny-day-theme
+     ;; tango-2-theme
+     ;; tango-plus-theme
+     ;; tangotango-theme
+     ;; tao-theme
+     ;; toxi-theme
+     ;; twilight-anti-bright-theme
+     ;; twilight-bright-theme
+     ;; twilight-theme
+     ;; ujelly-theme
+     ;; underwater-theme
      ;; vscode-dark-plus-theme
-     white-sand-theme
-     zen-and-art-theme
-     zenburn-theme
-     zerodark-theme
+     ;; white-sand-theme
+     ;; zen-and-art-theme
+     ;; zenburn-theme
+     ;; zerodark-theme
      )))
 ;; }}
 
