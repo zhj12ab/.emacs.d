@@ -31,12 +31,6 @@
 (setq user-full-name "HuaJianZeng")
 (setq user-mail-address "zhj12ab@163.com")
 
-;; 主题配置
-;; (load-theme 'doom-solarized-dark t)
-;; (load-theme 'doom-dark+ t)
-;; (load-theme 'doom-molokai t)
-(load-theme 'doom-dracula t)
-
 (set-fontset-font "fontset-default" 'unicode'("Sarasa Mono T SC"))
 (set-fontset-font "fontset-default" 'gb18030'("Sarasa Mono T SC". "unicode-bmp"))
 (dolist (param '((font . "Sarasa Mono T SC")))
@@ -490,5 +484,11 @@
   :bind
   ("C-<prior>" . centaur-tabs-backward)
   ("C-<next>" . centaur-tabs-forward))
+
+;; 主题配置
+;; (load-theme 'doom-solarized-dark t)
+;; (load-theme 'doom-dark+ t)
+;; (load-theme 'doom-molokai t)
+(load-theme 'doom-dracula t)
 
 ;; end of .custom.el
