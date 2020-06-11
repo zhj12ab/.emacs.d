@@ -127,10 +127,10 @@
   (require-init 'init-gtags t)
   (require-init 'init-clipboard)
   (require-init 'init-ctags t)
-  ;; (require-init 'init-bbdb t)
+  (require-init 'init-bbdb t)
   (require-init 'init-gnus t)
   (require-init 'init-lua-mode t)
-  ;; (require-init 'init-workgroups2 t) ; use native API in lightweight mode
+  (require-init 'init-workgroups2 t) ; use native API in lightweight mode
   (require-init 'init-term-mode t)
   (require-init 'init-web-mode t)
   (require-init 'init-company t)
@@ -150,11 +150,11 @@
   ;; handy tools though not must have
   (require-init 'init-misc t)
 
-  ;; (require-init 'init-emacs-w3m t)
+  (require-init 'init-emacs-w3m t)
   (require-init 'init-shackle t)
   (require-init 'init-dired t)
   (require-init 'init-writting t)
-  ;; (require-init 'init-hydra) ; hotkey is required everywhere
+  (require-init 'init-hydra) ; hotkey is required everywhere
   ;; use evil mode (vi key binding)
   (require-init 'init-evil) ; init-evil dependent on init-clipboard
 
