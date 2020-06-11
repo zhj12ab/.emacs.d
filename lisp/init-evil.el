@@ -732,13 +732,14 @@ If the character before and after CH is space or tab, CH is NOT slash"
                                   (face-foreground 'mode-line)))
 (defun my-show-evil-state ()
   "Change mode line color to notify user evil current state."
-  (let* ((color (cond ((minibufferp) my-default-color)
-                      ((evil-insert-state-p) '("#e80000" . "#ffffff"))
-                      ((evil-emacs-state-p)  '("#444488" . "#ffffff"))
-                      ((buffer-modified-p)   '("#006fa0" . "#ffffff"))
-                      (t my-default-color))))
-    (set-face-background 'mode-line (car color))
-    (set-face-foreground 'mode-line (cdr color))))
+  ;;(let* ((color (cond ((minibufferp) my-default-color)
+  ;;                    ((evil-insert-state-p) '("#e80000" . "#ffffff"))
+  ;;                    ((evil-emacs-state-p)  '("#444488" . "#ffffff"))
+  ;;                    ((buffer-modified-p)   '("#006fa0" . "#ffffff"))
+  ;;                    (t my-default-color))))
+  ;;  (set-face-background 'mode-line (car color))
+  ;;  (set-face-foreground 'mode-line (cdr color)))
+  )
 (add-hook 'post-command-hook #'my-show-evil-state)
 ;; }}
 

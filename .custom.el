@@ -110,10 +110,6 @@
   (interactive)
   (find-file "~/.emacs.d/.custom.el"))
 
-;; Use en_US locale to format time.
-;; if not set, the OS locale is used.
-(setq system-time-locale "C")
-
 ;; 使用astyl 格式化
 (defun zenghuajian/astyle (start end)
   (setq astyle-command "astyle -A1Lfpjk3NS")
