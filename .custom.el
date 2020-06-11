@@ -489,6 +489,7 @@
 ;; (load-theme 'doom-solarized-dark t)
 ;; (load-theme 'doom-dark+ t)
 ;; (load-theme 'doom-molokai t)
+;; (counsel-load-theme 'doom-dracula t)
 (load-theme 'doom-dracula t)
 
 ;; end of .custom.el

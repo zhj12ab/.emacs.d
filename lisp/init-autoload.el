@@ -59,7 +59,7 @@
 (autoload 'textile-mode "textile-mode" "Mode for editing Textile documents" t)
 (autoload 'find-library-name "find-func")
 (autoload 'web-mode "web-mode")
-;; (autoload 'wg-create-workgroup "workgroups2" nil t)
+(autoload 'wg-create-workgroup "workgroups2" nil t)
 (autoload 'snippet-mode "yasnippet" "")
 (autoload 'run-js "js-comint" "")
 (autoload 'vc-msg-show "vc-msg" "")
