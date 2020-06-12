@@ -134,8 +134,8 @@
 (require-package 'lsp-ui)
 (require-package 'doom-modeline)
 (require-package 'centaur-tabs)
-;; (require-package 'hide-mode-line)
-;; (require-package 'solaire-mode)
+(require-package 'hide-mode-line)
+(require-package 'solaire-mode)
 
 ;; 设置ccls 和 lsp
 (use-package lsp-mode
@@ -320,16 +320,16 @@
 ;; 禁止生成lockfile
 (setq create-lockfiles nil)
 
-;; ;; solaire-mode
-;; (use-package solaire-mode
-;;   :functions persp-load-state-from-file
-;;   :hook (((change-major-mode after-revert ediff-prepare-buffer) . turn-on-solaire-mode)
-;;          (minibuffer-setup . solaire-mode-in-minibuffer)
-;;          (after-load-theme . solaire-mode-swap-bg))
-;;   :init
-;;   (solaire-global-mode 1)
-;;   (advice-add #'persp-load-state-from-file
-;;               :after #'solaire-mode-restore-persp-mode-buffers))
+;; solaire-mode
+(use-package solaire-mode
+  :functions persp-load-state-from-file
+  :hook (((change-major-mode after-revert ediff-prepare-buffer) . turn-on-solaire-mode)
+         (minibuffer-setup . solaire-mode-in-minibuffer)
+         (after-load-theme . solaire-mode-swap-bg))
+  :init
+  (solaire-global-mode 1)
+  (advice-add #'persp-load-state-from-file
+              :after #'solaire-mode-restore-persp-mode-buffers))
 
 ;; doom-theme
 (use-package doom-themes
@@ -364,11 +364,11 @@
     (setq doom-modeline--default-format mode-line-format)
     (setq-default mode-line-format nil)))
 
-;; (use-package hide-mode-line
-;;   :hook (((completion-list-mode
-;;            completion-in-region-mode
-;;            pdf-annot-list-mode
-;;            flycheck-error-list-mode) . hide-mode-line-mode)))
+(use-package hide-mode-line
+  :hook (((completion-list-mode
+           completion-in-region-mode
+           pdf-annot-list-mode
+           flycheck-error-list-mode) . hide-mode-line-mode)))
 
 ;; Icons
 ;; NOTE: Must run `M-x all-the-icons-install-fonts', and install fonts manually on Windows
