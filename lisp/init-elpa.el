@@ -305,7 +305,6 @@ You still need modify `package-archives' in \"init-elpa.el\" to PERMANENTLY use 
 (require-package 'web-mode)
 (require-package 'emms)
 (require-package 'iedit)
-(require-package 'bash-completion)
 (require-package 'websocket) ; for debug debugging of browsers
 (require-package 'jss)
 (require-package 'undo-tree)
