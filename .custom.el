@@ -71,6 +71,8 @@
   "TAB" 'evil-switch-to-windows-last-buffer
   "bb" 'counsel-switch-buffer
   "bd" 'evil-delete-buffer
+  "bp" 'previous-buffer
+  "bn" 'next-buffer
   ;; lsp-rename
   "lr" 'lsp-rename
   ;; goto define
