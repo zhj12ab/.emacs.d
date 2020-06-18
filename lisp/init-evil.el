@@ -863,6 +863,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
 
 ;; {{ Port of vim-textobj-syntax.
 ;; It provides evil text objects for consecutive items with same syntax highlight.
+;; press "vah" or "vih"
 (require 'evil-textobj-syntax)
 ;; }}
 
