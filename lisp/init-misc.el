@@ -246,8 +246,6 @@ This function can be re-used by other major modes after compilation."
 (defalias 'list-buffers 'ibuffer)
 
                                         ;effective emacs item 7; no scrollbar, no menubar, no toolbar
-(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
-(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 
 (defun my-download-subtitles ()
   (interactive)
@@ -889,7 +887,7 @@ If the shell is already opened in some buffer, switch to that buffer."
           (concat (getenv "USER") " $ "))))
 
 ;; I'm in Australia now, so I set the locale to "en_AU"
-(defun insert-date (prefix)
+(defun my-insert-date (prefix)
   "Insert the current date. With prefix-argument, use ISO format. With
    two prefix arguments, write out the day and month name."
   (interactive "P")
@@ -1085,7 +1083,13 @@ Including indent-buffer, which should not be called automatically on save."
   (if word (setq word (downcase word)))
   (let* ((url (format "https://dictionary.cambridge.org/pronunciation/english/%s" word))
          (cached-mp3 (file-truename (concat my-emacs-d (format "misc/%s.mp3" word))))
-         (player (if (not *is-a-mac*) (my-guess-mplayer-path) "open"))
+         (player (cond
+                  (*is-a-mac*
+                   "open")
+                  (*win64*
+                   "start")
+                  (t
+                   (my-guess-mplayer-path))))
          online-mp3)
     (cond
      ((file-exists-p cached-mp3)
