@@ -12,6 +12,7 @@
   (add-to-list 'c-offsets-alist '(key . val)))
 
 (setq-default c-basic-offset 4)
+
 (defun my-common-cc-mode-setup ()
   "setup shared by all languages (java/groovy/c++ ...)"
   ;; give me NO newline automatically after electric expressions are entered

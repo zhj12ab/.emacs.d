@@ -32,7 +32,6 @@
     websocket ; to talk to the browser
     evil-exchange
     evil-find-char-pinyin
-    evil-lion
     ;; {{ dependencies of stable realgud are too old
     load-relative
     loc-changes
@@ -97,7 +96,6 @@
     pyim-basedict
     scratch
     session
-    multi-term
     inflections
     lua-mode
     pomodoro
@@ -279,7 +277,6 @@ You still need modify `package-archives' in \"init-elpa.el\" to PERMANENTLY use 
 ;; rvm-open-gem to get gem's code
 (require-package 'rvm)
 ;; C-x r l to list bookmarks
-(require-package 'multi-term)
 (require-package 'js-doc)
 (require-package 'js2-mode)
 (require-package 'rjsx-mode)
@@ -317,7 +314,6 @@ You still need modify `package-archives' in \"init-elpa.el\" to PERMANENTLY use 
 (require-package 'evil-nerd-commenter)
 (require-package 'evil-surround)
 (require-package 'evil-visualstar)
-(require-package 'evil-lion)
 (require-package 'evil-args)
 (require-package 'evil-textobj-syntax)
 (require-package 'slime)
