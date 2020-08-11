@@ -568,7 +568,6 @@ If INCLUSIVE is t, the text object is inclusive."
   "lq" 'highlight-symbol-query-replace
   "ln" 'highlight-symbol-nav-mode ; use M-n/M-p to navigation between symbols
   "ii" 'my-imenu-or-list-tag-in-current-file
-  "." 'evil-ex
   ;; @see https://github.com/pidu/git-timemachine
   ;; p: previous; n: next; w:hash; W:complete hash; g:nth version; q:quit
   "tm" 'my-git-timemachine
@@ -691,9 +690,8 @@ If INCLUSIVE is t, the text object is inclusive."
   "xc" 'save-buffers-kill-terminal ; not used frequently
   "cc" 'my-dired-redo-last-command
   "ss" 'wg-create-workgroup ; save windows layout
-  "ee" 'evilmr-replace-in-defun ; replace in defun
   "sc" 'shell-command
-  "ll" 'my-wg-switch-workgroup ; load windows layout
+  "ll" 'wg-open-workgroup ; load windows layout
   "jj" 'scroll-other-window
   "kk" 'scroll-other-window-up
   "hh" 'random-healthy-color-theme
